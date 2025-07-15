@@ -2,7 +2,7 @@ require('dotenv').config({ path: '/etc/secrets/environment.env' });
 console.log('MONGODB_URI:', process.env.MONGODB_URI);
 const express = require('express')
 const Note = require('./models/note')
-
+const cors = require('cors');
 const app = express()
 
 const requestLogger = (request, response, next) => {
