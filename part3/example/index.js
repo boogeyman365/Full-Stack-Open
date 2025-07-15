@@ -1,4 +1,5 @@
 require('dotenv').config({ path: '/etc/secrets/environment.env' });
+console.log('MONGODB_URI:', process.env.MONGODB_URI);
 const express = require('express')
 const app = express()
 const cors = require('cors')
