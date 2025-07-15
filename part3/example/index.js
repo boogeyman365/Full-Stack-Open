@@ -1,11 +1,14 @@
+require('dotenv').config({ path: '/etc/secrets/environment.env' });
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const Note = require('./models/note')
 
 
 app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
+
 
 let notes = [
   {
@@ -57,7 +60,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/notes', (request, response) => {
-  response.json(notes)
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
 })
 
 app.get('/api/notes/:id', (request, response) => {
