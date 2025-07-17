@@ -1,8 +1,8 @@
-require('dotenv').config({ path: '/etc/secrets/environment.env' });
-console.log('MONGODB_URI:', process.env.MONGODB_URI);
+require('dotenv').config({ path: '/etc/secrets/environment.env' })
+console.log('MONGODB_URI:', process.env.MONGODB_URI)
 const express = require('express')
 const Note = require('./models/note')
-const cors = require('cors');
+const cors = require('cors')
 const app = express()
 
 const requestLogger = (request, response, next) => {
@@ -32,23 +32,23 @@ app.use(express.json())
 app.use(requestLogger)
 
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    important: true
-  },
-  {
-    id: 2,
-    content: "Browser can execute only JavaScript",
-    important: false
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true
-  }
-]
+// let notes = [
+//   {
+//     id: 1,
+//     content: 'HTML is easy',
+//     important: true
+//   },
+//   {
+//     id: 2,
+//     content: 'Browser can execute only JavaScript',
+//     important: false
+//   },
+//   {
+//     id: 3,
+//     content: 'GET and POST are the most important methods of HTTP protocol',
+//     important: true
+//   }
+// ]
 
 app.post('/api/notes', (request, response, next) => {
   const body = request.body
@@ -94,10 +94,10 @@ app.put('/api/notes/:id', (request, response, next) => {
   const { content, important } = request.body
 
   Note.findByIdAndUpdate(
-    request.params.id, 
+    request.params.id,
     { content, important },
     { new: true, runValidators: true, context: 'query' }
-  ) 
+  )
     .then(updatedNote => {
       response.json(updatedNote)
     })
@@ -106,7 +106,7 @@ app.put('/api/notes/:id', (request, response, next) => {
 
 app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
