@@ -5,11 +5,17 @@ if (process.argv.length < 3) {
   process.exit(1)
 }
 
+console.log(process.env)
+
 const password = process.argv[2]
 
-const url = `mongodb+srv://fullstack:${password}@cluster0.a5qfl.mongodb.net/noteApp?retryWrites=true&w=majority&appName=Cluster0`
+const url = process.env.NODE_ENV === 'test'
+  ? `mongodb+srv://oscarestablie:${password}@cluster0.fqm1ewn.mongodb.net/noteApp?retryWrites=true&w=majority`
+  : `mongodb+srv://oscarestablie:${password}@cluster0.fqm1ewn.mongodb.net/testNoteApp?retryWrites=true&w=majority`
 
-mongoose.set('strictQuery', false)
+console.log(url)
+mongoose.set('strictQuery',false)
+
 mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
