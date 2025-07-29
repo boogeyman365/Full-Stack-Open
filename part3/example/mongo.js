@@ -4,7 +4,7 @@ if (process.argv.length<3) {
   console.log('give password as argument')
   process.exit(1)
 }
-
+console.log('process: ', process)
 const password = process.argv[2]
 
 const url =
