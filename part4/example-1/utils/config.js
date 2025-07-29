@@ -1,4 +1,5 @@
 require('dotenv').config({ path: '/etc/secrets/environment.env' })
+console.log('process.env: ',process.env)
 
 const PORT = process.env.PORT
 
