@@ -1,0 +1,7 @@
+POST https://full-stack-open-pjhu.onrender.com/api/login
+Content-Type: application/json
+
+{
+    "username": "boogey",
+    "password": "boogey"
+}
