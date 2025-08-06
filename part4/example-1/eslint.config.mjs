@@ -1,10 +1,15 @@
-import globals from 'globals'
+import globals, { browser } from 'globals'
 import js from '@eslint/js'
 import stylisticJs from '@stylistic/eslint-plugin-js'
 
 export default [
   js.configs.recommended,
   {
+    env: {
+      browser: true,
+      es2020: true,
+      "jest/globals": true
+    },
     files: ['**/*.js'],
     languageOptions: {
       sourceType: 'commonjs',

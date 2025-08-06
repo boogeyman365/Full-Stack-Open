@@ -6,6 +6,7 @@
     "start": "node index.js",
     "dev": "cross-env NODE_ENV=test nodemon index.js",
     "test": "cross-env  NODE_ENV=test node --test",
+    "test-jest": "jest",
     "lint": "eslint .",
     "fix": "eslint . --fix"
   },
@@ -21,10 +22,15 @@
     "mongoose": "^8.16.5"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "@eslint/js": "^9.22.0",
     "@stylistic/eslint-plugin-js": "^4.2.0",
+    "deep-freeze": "^0.0.1",
     "eslint": "^9.22.0",
+    "eslint-plugin-jest": "^29.0.1",
     "globals": "^16.0.0",
+    "jest": "^30.0.5",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.3"
   }
