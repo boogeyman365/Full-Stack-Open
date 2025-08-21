@@ -1,30 +1,37 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { ALL_PERSONS, CREATE_PERSON } from '../queries'
 
+import { CREATE_PERSON, ALL_PERSONS } from '../queries'
 
-
-const PersonForm = (props) => {
+const PersonForm = ({ setError }) => {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [street, setStreet] = useState('')
   const [city, setCity] = useState('')
 
-//   make a function that can be triggered by its father
-  const { setCloseForm } = props
-
-    const onCloseForm = (value) => {
-        setCloseForm(value)
-    }
   const [ createPerson ] = useMutation(CREATE_PERSON, {
-    refetchQueries: [ { query: ALL_PERSONS } ]
+    onError: (error) => {
+      const messages = error.graphQLErrors.map(e => e.message).join('\n')
+      setError(messages)
+    },
+    update: (cache, response) => {
+      cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
+        return {
+          allPersons: allPersons.concat(response.data.addPerson),
+        }
+      })
+    },
   })
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
 
-
-    createPerson({  variables: { name, phone, street, city } })
+    createPerson({
+      variables: {
+        name, street, city,
+        phone: phone.length > 0 ? phone : undefined
+      }
+    })
 
     setName('')
     setPhone('')
@@ -57,8 +64,6 @@ const PersonForm = (props) => {
           />
         </div>
         <button type='submit'>add!</button>
-        <br />
-        <button onClick={() => onCloseForm(false) }>Close</button>
       </form>
     </div>
   )
