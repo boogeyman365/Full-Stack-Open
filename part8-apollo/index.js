@@ -4,16 +4,18 @@ const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
 
 const mongoose = require('mongoose')
-mongoose.set('strictQuery', false)
+const config = require('./utils/config')
 const Person = require('./models/person')
 const User = require('./models/user')
-require('dotenv').config()
+require('dotenv').config({ path: '/etc/secrets/environment.env' })
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
 
-const MONGODB_URI = process.env.MONGODB_URI
+const url = config.MONGODB_URI
+console.log('process.env: ',config)
+console.log('connecting to', url)
 
-console.log('connecting to', MONGODB_URI)
-
-mongoose.connect(MONGODB_URI)
+mongoose.connect(url)
   .then(() => {
     console.log('connected to MongoDB')
   })
@@ -210,7 +212,11 @@ const resolvers = {
         id: user._id,
       }
 
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+      return { value: jwt.sign(
+          userForToken,
+          process.env.SECRET,
+          { expiresIn: 60*60 }
+        ) }
     },
     addAsFriend: async (root, args, { currentUser }) => {
       const nonFriendAlready = (person) =>
