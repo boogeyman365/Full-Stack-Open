@@ -9,18 +9,28 @@ const PersonForm = ({ setError }) => {
   const [street, setStreet] = useState('')
   const [city, setCity] = useState('')
 
+  const updateCacheWith = (addedPerson) => {
+    const includedIn = (set, object) =>
+      set.map(p => p.id).includes(object.id)
+
+    const dataInStore = client.readQuery({ query: ALL_PERSONS })
+    if (!includedIn(dataInStore.allPersons, addedPerson)) {
+      client.writeQuery({
+        query: ALL_PERSONS,
+        data: { allPersons : dataInStore.allPersons.concat(addedPerson) }
+      })
+    }
+  }
+
+
   const [ createPerson ] = useMutation(CREATE_PERSON, {
     onError: (error) => {
       const messages = error.graphQLErrors.map(e => e.message).join('\n')
       setError(messages)
     },
-    update: (cache, response) => {
-      cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
-        return {
-          allPersons: allPersons.concat(response.data.addPerson),
-        }
-      })
-    },
+    update: (store, response) => {
+      updateCacheWith(response.data.addPerson)
+    }
   })
 
   const submit = async (event) => {

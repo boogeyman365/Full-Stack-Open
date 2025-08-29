@@ -12,7 +12,6 @@ const { PubSub } = require('graphql-subscriptions')
 const pubsub = new PubSub()
 
 const url = config.MONGODB_URI
-console.log('process.env: ',config)
 console.log('connecting to', url)
 
 mongoose.connect(url)
@@ -166,6 +165,8 @@ const resolvers = {
         })
       }
 
+      pubsub.publish('PERSON_ADDED', { personAdded: person })
+
       return person
     },
     editNumber: async (root, args) => {
@@ -237,6 +238,11 @@ const resolvers = {
 
       return currentUser
     },
+    Subscription: {
+      personAdded: {
+        subscribe: () => pubsub.asyncIterator(['PERSON_ADDED'])
+      },
+    }
   }
 }
 
@@ -258,6 +264,7 @@ startStandaloneServer(server, {
       return { currentUser }
     }
   },
-}).then(({ url }) => {
+}).then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
